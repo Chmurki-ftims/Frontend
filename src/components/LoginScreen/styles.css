@@ -1,0 +1,7 @@
+.login-screen {
+    height: 100vh;
+}
+
+form {
+    flex-basis: 70%;
+}

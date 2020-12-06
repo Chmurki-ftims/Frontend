@@ -1,0 +1,60 @@
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 250">
+  <defs>
+    <style>
+      .cls-1 {
+        font-size: 120px;
+      }
+
+      .cls-1, .cls-3 {
+        fill: #2155fb;
+        font-family: MyriadPro-Regular, Myriad Pro;
+      }
+
+      .cls-2 {
+        letter-spacing: 0.01599em;
+      }
+
+      .cls-3 {
+        font-size: 24px;
+        letter-spacing: 0.32001em;
+      }
+
+      .cls-4 {
+        letter-spacing: 0.35em;
+      }
+
+      .cls-5 {
+        letter-spacing: 0.36001em;
+      }
+
+      .cls-6 {
+        letter-spacing: 0.37799em;
+      }
+
+      .cls-7 {
+        letter-spacing: 0.354em;
+      }
+
+      .cls-8 {
+        letter-spacing: 0.35999em;
+      }
+
+      .cls-10, .cls-9 {
+        fill: none;
+      }
+
+      .cls-9 {
+        stroke: #2155fb;
+        stroke-linecap: round;
+        stroke-miterlimit: 10;
+        stroke-width: 10px;
+      }
+    </style>
+  </defs>
+  <g>
+    <text class="cls-1" transform="translate(47.49805 145.06348)"><tspan class="cls-2">K</tspan><tspan x="66.95801" y="0">alKom</tspan></text>
+    <text class="cls-3" transform="translate(53.69336 188.1748)">T<tspan class="cls-4" x="19.60791" y="0">w</tspan><tspan class="cls-5" x="45.67188" y="0">oja ścież</tspan><tspan class="cls-6" x="207.2627" y="0">k</tspan><tspan class="cls-5" x="227.59033" y="0">a suk</tspan><tspan class="cls-7" x="321.42969" y="0">c</tspan><tspan class="cls-8" x="340.67773" y="0">esu</tspan></text>
+    <line class="cls-9" x1="50" y1="159" x2="450" y2="159"/>
+    <rect class="cls-10" width="500" height="250"/>
+  </g>
+</svg>
