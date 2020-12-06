@@ -4,6 +4,9 @@ phases:
   pre_build:
     commands:
       - npm install
+      - npm install @material-ui/core
+      - npm install @types/material-ui
+      - npm install react-router-dom
   build:
     commands:
       - npm run build
