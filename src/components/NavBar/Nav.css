@@ -1,0 +1,38 @@
+.nav-bar {
+  color: white;
+  fill: white;
+}
+.navbar {
+  height: 110px;
+}
+.nav {
+  color: white;
+  fill: white;
+}
+a {
+  color: white;
+}
+h3 {
+  color: #2155fb;
+}
+
+ul {
+  height: 100px;
+}
+li {
+  height: 100px;
+}
+.logofield {
+  padding-right: 40rem;
+}
+.whole-nav-bar {
+  height: 150px;
+  margin-left: 0;
+  margin-right: 0;
+  width: 100%;
+  border: #1e1b21;
+  border-bottom: #2155fb;
+  border-width: 1px;
+  border-style: solid;
+  margin-bottom: 30px;
+}

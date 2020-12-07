@@ -1,24 +1,19 @@
-import React, {useState} from 'react';
-import './App.css';
-import Header from './components/header';
-import LoginScreen from './components/LoginScreen';
+import React, { useState } from "react";
+import "./App.css";
+// import Header from "./components/header";
+import LoginScreen from "./components/LoginScreen";
 import {
-  BrowserRouter as Router, 
+  BrowserRouter as Router,
   Switch,
   Route,
-  Redirect
-  } from 'react-router-dom';
+  Redirect,
+} from "react-router-dom";
+import StartPage from "./components/MainPage/StartPage";
+import { CalculateB2b } from "./components/B2bPage/CalculateB2b";
+import { CalculatorUop } from "./components/UopPage/CalculatorUop";
+import { CalculatorUz } from "./components/UzPage/CalculatorUz";
+import { Compare } from "./components/ComparatorPage/Compare";
 
-
-// function App() {
-//   return (
-//     <div className="App">
-//         <Header/>
-//     </div>
-//   );
-// }
-
-// export default App;
 
 export default function App() {
   //state
@@ -33,23 +28,23 @@ export default function App() {
 
   return (
     <Router>
-
-      {((isLogged) => 
-        isLogged ? (
-          <Redirect to="/" />
-        ) : (
-          <Redirect to="/login" />
-        ))(isAuth)
-      }
+      {((isLogged) =>
+        isLogged ? <Redirect to="/" /> : '')(isAuth)}  
 
       <Switch>
-        <Route path="/login">
-          <LoginScreen onLogIn={handleLogIn}/>
+        <Route exact path="/" component={StartPage} />
+        <Route path="/signin" > 
+        {/* </Route>component={LoginScreen} onLogIn={handleLogIn}/> */}
+          <LoginScreen onLogIn={handleLogIn} />
         </Route>
-        <Route path="/">
-          <Header/>
+        <Route path="/b2b" component={CalculateB2b} />
+        <Route path="/uop" component={CalculatorUop} />
+        <Route path="/uz" component={CalculatorUz} />
+        <Route path="/compare" component={Compare} />
+        <Route path="*">
+          <div>404 Page Not Found</div>
         </Route>
       </Switch>
     </Router>
-  )
-};
+  );
+}

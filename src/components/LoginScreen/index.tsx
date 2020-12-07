@@ -24,17 +24,17 @@ const textFieldStyles = makeStyles({
     }
 })
 
-interface LoginData {
-  email: string,
-  password: string
-}
+// interface LoginData {
+//   email: string,
+//   password: string
+// }
 
 const loginDataBase = {
   email: 'janek@gmail.com',
   password: '1234567890'
 }
 
-const LoginScreen = (props:any) => {
+const LoginScreen = (props: any) => {
     // state
     let [wantToLogIn, setDesireToLogIn]: [boolean, any] = useState(true);
     let [name, setName] = useState('');
