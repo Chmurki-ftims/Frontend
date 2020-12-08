@@ -7,7 +7,7 @@ import Logo from '../Logo'
 export default function NavBar(props: any) {
   return (
     <nav>
-      <Link className="d-flex d-md-inline justify-content-center justify-content-md-start" to="/"><Logo width="300" height="100" size="small" /></Link>
+      <Link className="d-flex d-md-inline justify-content-center justify-content-md-start" to="/home"><Logo width="300" height="100" size="small" /></Link>
       <LoginController />
       <Menu />
     </nav>

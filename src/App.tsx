@@ -27,20 +27,22 @@ export default function App() {
 
   return (
     <Router>
-      <NavBar/>
-      {((isLogged) =>
-        isLogged ? <Redirect to="/" /> : null)(isAuth)}  
+      {((isLogged) => <Redirect to={isLogged ? "/home" : "signin"} />)(isAuth)}  
 
       <Switch>
-        <Route exact path="/" component={About} />
         <Route path="/signin" > 
         {/* </Route>component={LoginScreen} onLogIn={handleLogIn}/> */}
           <LoginScreen onLogIn={handleLogIn} />
         </Route>
-        <Route path="/b2b" component={CalculatorB2B} />
-        <Route path="/uop" component={CalculatorUOP} />
-        <Route path="/uz" component={CalculatorUZ} />
-        <Route path="/compare" component={Comparator} />
+        <Route path="/home">
+          <NavBar/>
+          <Route exact path="/home/" component={About} />
+          <Route path="/home/b2b" component={CalculatorB2B} />
+          <Route path="/home/uop" component={CalculatorUOP} />
+          <Route path="/home/uz" component={CalculatorUZ} />
+          <Route path="/home/compare" component={Comparator} />
+        </Route>
+
         <Route path="*">
           <div>404 Page Not Found</div>
         </Route>
