@@ -1,4 +1,5 @@
-import React from "react";
+import React from 'react'
+
 // interface Props {
 //     year: number,
 //     taxTyp: string,
@@ -6,9 +7,9 @@ import React from "react";
 
 // }
 
-export const BbConcent = (props: any) => {
-  return (
-    <div className="container">
+export default function CalculatorB2B (props: any) {
+    return (
+    <div className="container-fluid page">
       <div className="row">
         <div className="col-3">
           <form>
@@ -148,5 +149,5 @@ export const BbConcent = (props: any) => {
          </div>*/}
       </div>
     </div>
-  );
-};
+  )
+}

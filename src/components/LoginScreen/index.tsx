@@ -131,7 +131,7 @@ const LoginScreen = (props: any) => {
     return (
         <div className="login-screen d-flex p-2 flex-column flex-md-row justify-content-center align-items-center">
             <div className="d-flex justify-content-center align-items-center col col-lg-5">
-                <Logo width="100%" height="auto"/>
+                <Logo width="100%" height="auto" size="big"/>
             </div>
 
             <div className="d-flex justify-content-center align-items-center col col-lg-7">

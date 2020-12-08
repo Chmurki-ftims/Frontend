@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "./App.css";
-// import Header from "./components/header";
 import LoginScreen from "./components/LoginScreen";
 import {
   BrowserRouter as Router,
@@ -8,12 +7,12 @@ import {
   Route,
   Redirect,
 } from "react-router-dom";
-import StartPage from "./components/MainPage/StartPage";
-import { CalculateB2b } from "./components/B2bPage/CalculateB2b";
-import { CalculatorUop } from "./components/UopPage/CalculatorUop";
-import { CalculatorUz } from "./components/UzPage/CalculatorUz";
-import { Compare } from "./components/ComparatorPage/Compare";
-
+import About from "./components/About";
+import CalculatorB2B from "./components/CalculatorB2B";
+import CalculatorUOP from "./components/CalculatorUOP";
+import CalculatorUZ from "./components/CalculatorUZ";
+import Comparator from "./components/Comparator";
+import NavBar from './components/NavBar';
 
 export default function App() {
   //state
@@ -28,19 +27,20 @@ export default function App() {
 
   return (
     <Router>
+      <NavBar/>
       {((isLogged) =>
-        isLogged ? <Redirect to="/" /> : '')(isAuth)}  
+        isLogged ? <Redirect to="/" /> : null)(isAuth)}  
 
       <Switch>
-        <Route exact path="/" component={StartPage} />
+        <Route exact path="/" component={About} />
         <Route path="/signin" > 
         {/* </Route>component={LoginScreen} onLogIn={handleLogIn}/> */}
           <LoginScreen onLogIn={handleLogIn} />
         </Route>
-        <Route path="/b2b" component={CalculateB2b} />
-        <Route path="/uop" component={CalculatorUop} />
-        <Route path="/uz" component={CalculatorUz} />
-        <Route path="/compare" component={Compare} />
+        <Route path="/b2b" component={CalculatorB2B} />
+        <Route path="/uop" component={CalculatorUOP} />
+        <Route path="/uz" component={CalculatorUZ} />
+        <Route path="/compare" component={Comparator} />
         <Route path="*">
           <div>404 Page Not Found</div>
         </Route>
