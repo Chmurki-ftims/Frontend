@@ -1,13 +1,15 @@
 //TODO: 1) optimize the code: showForm() must be more simple than actually is
 //      2) make the TextFields controlled        
 
-import React, {useState} from 'react';
+import React, {useState, Dispatch, SetStateAction} from 'react';
 import './styles.css';
 import Logo from '../Logo';
 import {ThemeProvider, makeStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import theme from '../theme';
+
+import Auth from '@aws-amplify/auth';
 
 const textFieldStyles = makeStyles({
     root: {
@@ -24,26 +26,22 @@ const textFieldStyles = makeStyles({
     }
 })
 
-// interface LoginData {
-//   email: string,
-//   password: string
-// }
-
-const loginDataBase = {
-  email: 'janek@gmail.com',
-  password: '1234567890'
+interface AuthenticationProps {
+    isDesireToLogIn?: boolean,
+    onLogIn(): void,
+    onSignUp(): void
 }
 
-const LoginScreen = (props: any) => {
+export default function Authentication (props: AuthenticationProps) {
     // state
-    let [wantToLogIn, setDesireToLogIn]: [boolean, any] = useState(true);
+    let [wantToLogIn, setDesireToLogIn]: [boolean, Dispatch<SetStateAction<boolean>>] = useState((props.isDesireToLogIn !== undefined) ? props.isDesireToLogIn : true);
     let [name, setName] = useState('');
     let [email, setEmail] = useState('');
     let [password, setPassword] = useState('');
     let [passwordConfirm, setPasswordConfirm] = useState('');
-    // state
+    // end state
 
-    //methods
+    // methods
     function handleSwith() {
         setName('');
         setEmail('');
@@ -54,16 +52,28 @@ const LoginScreen = (props: any) => {
     }
 
     const handleLogIn = () => {
-        console.log('log in');
-        if (email === loginDataBase.email && password === loginDataBase.password) {
-            props.onLogIn()
-        }
+        Auth.signIn(email, password)
+	            .then(success => {
+                        console.log('successful sign in')
+                        props.onLogIn()
+                    })
+	            .catch(err => console.log(err));
     }
 
     function handleSignUp() {
-        console.log('sign up');
+                Auth.signUp({
+	                    username: email,
+	                    password: password,
+	                    attributes: {
+                            nickname: name, 
+	            },
+        }).then(success => {
+                        console.log('successful sign up')
+                    })
+	            .catch(err => console.log(err));
+
     }
-    //methods
+    // end methods
 
     const classes = textFieldStyles();
 
@@ -142,5 +152,3 @@ const LoginScreen = (props: any) => {
         </div>
     );
 }
-
-export default LoginScreen;
