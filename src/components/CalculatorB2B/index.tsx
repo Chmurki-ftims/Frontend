@@ -1,5 +1,5 @@
-import React from 'react'
-
+import React from "react";
+import "./styles.css";
 // interface Props {
 //     year: number,
 //     taxTyp: string,
@@ -7,147 +7,327 @@ import React from 'react'
 
 // }
 
-export default function CalculatorB2B (props: any) {
-    return (
+export default function CalculatorB2B(props: any) {
+  return (
     <div className="container-fluid page">
-      <div className="row">
+      <div className="form-row">
         <div className="col-3">
-          <form>
-            <div className="form-group">
-              <label htmlFor="taxYear">Rok podatkowy:</label>
-              <select className="form-control" id="taxYear">
-                <option>2020</option>
-                <option>2021</option>
-              </select>
+          <div className="form-row">
+            <div className="row justify-content-center">
+              <form>
+                <div className="form-group">
+                  <label htmlFor="taxYear">Rok podatkowy:</label>
+                  <select className="form-control" id="taxYear">
+                    <option>2020</option>
+                    <option disabled>2021</option>
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label htmlFor="taxType">Typ podatku:</label>
+                  <select className="form-control" id="taxType">
+                    <option>Podatek liniowy</option>
+                    <option>Podatek progresywny</option>
+                  </select>
+                </div>
+                <label htmlFor="contribution">Składka:</label>
+                <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  name="pensionablePay"
+                  id="contribution1"
+                  value="option1"
+                />
+                <label className="form-check-label" htmlFor="contribution1">
+                  Emerytalna
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  name="socialPension"
+                  id="contribution2"
+                  value="option2"
+                />
+                <label className="form-check-label" htmlFor="contribution2">
+                  Rentowa
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  name="Sickness"
+                  id="contribution3"
+                  value="option3"
+                />
+                <label className="form-check-label" htmlFor="contribution3">
+                  Chorobowa
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  name="healthInsurance"
+                  id="contribution4"
+                  value="option4"
+                />
+                <label className="form-check-label" htmlFor="contribution4">
+                  Zdrowotna
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  name="deductible"
+                  id="contribution5"
+                  value="option5"
+                />
+                <label className="form-check-label" htmlFor="contribution5">
+                  Podlegająca odliczeniu
+                </label>
+              </div>
+                <div className="form-group">
+                  <label htmlFor="vat">Stawka VAT:</label>
+                  <select className="form-control" id="vat">
+                    <option>0%</option>
+                    <option>5%</option>
+                    <option>8%</option>
+                    <option>23%</option>
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label htmlFor="month">Miesiąc:</label>
+                  <select className="form-control" id="month">
+                    <option>Styczeń</option>
+                    <option>Luty</option>
+                    <option>Marzec</option>
+                    <option>Kwiecień</option>
+                    <option>Maj</option>
+                    <option>Czerwiec</option>
+                    <option>Lipiec</option>
+                    <option>Sierpień</option>
+                    <option>Wrzesień</option>
+                    <option>Październik</option>
+                    <option>Listopad</option>
+                    <option>Grudzień</option>
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label htmlFor="costs">Koszty:</label>
+                  <div className="form-row">
+                    {/* <label htmlFor="Cost">Koszty:</label> */}
+                    <div className="form-group col-6">
+                      {/* <label htmlFor="Title">Tytuł:</label> */}
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="title1"
+                        placeholder="Tytuł"
+                      />
+                    </div>
+                    <div className="form-group col-6">
+                      {/* <label htmlFor="Title">Cost:</label> */}
+                      <input
+                        type="number"
+                        className="form-control"
+                        id="value1"
+                        placeholder="Wartość"
+                        min="0"
+                        step="100"
+                      />
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    {/* <label htmlFor="">kdsvolm</label> */}
+                    <button type="button" className="btn btn-primary btn-block">
+                      Dodaj
+                    </button>
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label htmlFor="revenue">Przychód:</label>
+                  <div className="form-row">
+                    {/* <label htmlFor="Cost">Przychód:</label> */}
+                    <div className="form-group col-6">
+                      {/* <label htmlFor="Title">Tytuł:</label> */}
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="title2"
+                        placeholder="Tytuł"
+                      />
+                    </div>
+                    <div className="form-group col-6">
+                      {/* <label htmlFor="Title">Cost:</label> */}
+                      <input
+                        type="number"
+                        className="form-control"
+                        id="value2"
+                        placeholder="Wartość"
+                        min="0"
+                        step="100"
+                      />
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <button type="button" className="btn btn-primary btn-block">
+                      Dodaj
+                    </button>
+                  </div>
+                </div>
+              </form>
             </div>
-            <div className="form-group">
-              <label htmlFor="taxType">Typ podatku:</label>
-              <select className="form-control" id="taxType">
-                <option>Podatek liniowy</option>
-                <option>Podatek progresywny</option>
-              </select>
-            </div>
-            <div className="form-group">
-              <label htmlFor="vat">Stawka VAT:</label>
-              <select className="form-control" id="vat">
-                <option>0%</option>
-                <option>5%</option>
-                <option>8%</option>
-                <option>23%</option>
-              </select>
-            </div>
-          </form>
-          <button type="button" className="btn btn-primary btn-lg btn-block">
-            Oblicz
-          </button>
-          <button type="button" className="btn btn-secondary btn-lg btn-block">
-            Zapisz
-          </button>
+            <button type="button" className="btn btn-primary btn-block">
+              Oblicz
+            </button>
+            <button type="button" className="btn btn-secondary btn-block">
+              Zapisz
+            </button>
+          </div>
         </div>
 
-        {/* <div className="col-9">
-          <table className="table table-bordered">
-            <thead>
-              <tr>
-                <th scope="col">Miesiąc</th>
+        
+        <div className="col-9">
+          <div className="table-responsive">
+            <table className="table table-bordered">
+              <thead>
                 <tr>
-                  <th colSpan={2}>Styczen</th>
+                  <tr className="months">
+                    <td rowSpan={2} colSpan={2}></td>
+                    <td colSpan={2}>
+                      <b>Styczeń</b>
+                    </td>
+                    <td colSpan={2}>
+                      <b>Luty</b>
+                    </td>
+                    <td colSpan={2}>
+                      <b>Marzec</b>
+                    </td>
+                    <td colSpan={2}>
+                      <b>Kwiecień</b>
+                    </td>
+                    <td colSpan={2}>
+                      <b>Maj</b>
+                    </td>
+                    <td colSpan={2}>
+                      <b>Czerwiec</b>
+                    </td>
+                    <td colSpan={2}>
+                      <b>Lipiec</b>
+                    </td>
+                    <td colSpan={2}>
+                      <b>Sierpień</b>
+                    </td>
+                    <td colSpan={2}>
+                      <b>Wrzesień</b>
+                    </td>
+                    <td colSpan={2}>
+                      <b>Październik</b>
+                    </td>
+                    <td colSpan={2}>
+                      <b>Listopad</b>
+                    </td>
+                    <td colSpan={2}>
+                      <b>Grudzień</b>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <b>Tytuł</b>
+                    </td>
+                    <td>
+                      <b>Wartość</b>
+                    </td>
+                    <td>
+                      <b>Tytuł</b>
+                    </td>
+                    <td>
+                      <b>Wartość</b>
+                    </td>
+                    <td>
+                      <b>Tytuł</b>
+                    </td>
+                    <td>
+                      <b>Wartość</b>
+                    </td>
+                    <td>
+                      <b>Tytuł</b>
+                    </td>
+                    <td>
+                      <b>Wartość</b>
+                    </td>
+                    <td>
+                      <b>Tytuł</b>
+                    </td>
+                    <td>
+                      <b>Wartość</b>
+                    </td>
+                    <td>
+                      <b>Tytuł</b>
+                    </td>
+                    <td>
+                      <b>Wartość</b>
+                    </td>
+                    <td>
+                      <b>Tytuł</b>
+                    </td>
+                    <td>
+                      <b>Wartość</b>
+                    </td>
+                    <td>
+                      <b>Tytuł</b>
+                    </td>
+                    <td>
+                      <b>Wartość</b>
+                    </td>
+                    <td>
+                      <b>Tytuł</b>
+                    </td>
+                    <td>
+                      <b>Wartość</b>
+                    </td>
+                    <td>
+                      <b>Tytuł</b>
+                    </td>
+                    <td>
+                      <b>Wartość</b>
+                    </td>
+                    <td>
+                      <b>Tytuł</b>
+                    </td>
+                    <td>
+                      <b>Wartość</b>
+                    </td>
+                    <td>
+                      <b>Tytuł</b>
+                    </td>
+                    <td>
+                      <b>Wartość</b>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colSpan={2}>
+                      <b>Przychód</b>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colSpan={2}>
+                      <b>Koszty</b>
+                    </td>
+                  </tr>
                 </tr>
-                <tr>
-                  <th scope="col" style={{paddingLeft:'24px', paddingRight:'23px'}}>Tytuł</th>
-                  <th scope="col">Wartość</th>
-                </tr>
-                <th>
-                <tr>
-                  <th colSpan={2}>Luty</th>
-                </tr>
-                <tr>
-                  <th scope="col" style={{paddingLeft:'24px', paddingRight:'23px'}}>Tytuł</th>
-                  <th scope="col">Wartość</th>
-                </tr>
-                </th>
-                <th scope="col">Luty</th>
-                <th scope="col">Marzec</th>
-                <th scope="col">Kwiecień</th>
-                <th scope="col">Maj</th>
-                <th scope="col">Czerwiec</th>
-                <th scope="col">Lipiec</th>
-                <th scope="col">Sierpień</th>
-                <th scope="col">Wrzesień</th>
-                <th scope="col">Październik</th>
-                <th scope="col">Listopad</th>
-                <th scope="col">Grudzień</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th>Przychód</th>
-                <table className="table table-bordered">
-                  <tbody>
-                    <tr>
-                      <td>111</td>
-                      <td>111</td>
-                    </tr>
-                  </tbody>
-                </table>
-
-              </tr>
-              <tr>
-                <th>Koszty</th>
-
-                <table className="table table-bordered">
-                  <tbody>
-                    <tr>
-                      <td>111</td>
-                      <td>111</td>
-                    </tr>
-                  </tbody>
-                </table>
-
-              </tr>
-            </tbody>
-          </table>
-          <table className="table table-bordered">
-            <thead>
-              <tr>
-                <th colSpan={4}>Miesiąc</th>
-              </tr>
-              <tr>
-                
-                <th  colSpan={2} scope="col">Przychód</th>
-                <th  colSpan={2} scope="col">Koszty</th>
-                
-              </tr>
-              <tr>
-                <th scope="col">Tytuł</th>
-                <th scope="col">Koszty</th>
-                <th scope="col">Tytuł</th>
-                <th scope="col">Koszty</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><input type="text" placeholder="tytuł"/></td>
-                <td><input type="text" placeholder="wartość"/></td>
-                <td><input type="text" placeholder="tytuł"/></td>
-                <td><input type="text" placeholder="wartość"/></td>
-              </tr>
-              <tr>
-                <td>sadf</td>
-                <td>asf</td>
-                <td>342</td>
-                <td>fs</td>
-              </tr>
-              <tr>
-                <td>sadf</td>
-                <td>asf</td>
-                <td>342</td>
-                <td>fs</td>
-              </tr>
-            </tbody>
-          </table>
-         </div>*/}
+              </thead>
+              <tbody>
+                <tr></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
-  )
+  );
 }

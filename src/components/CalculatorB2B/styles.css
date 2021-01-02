@@ -1,0 +1,12 @@
+td {
+    text-align: center;
+    align-items: center;
+}
+
+.months > td {
+    width: 200px;
+}
+
+form {
+    justify-content: center;
+}
