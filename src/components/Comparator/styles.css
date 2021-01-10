@@ -1,0 +1,18 @@
+.table {
+    margin: auto;
+    width: fit-content;   
+}
+
+/* th.months {
+    color: brown;
+    fill: chartreuse;
+    vertical-align: middle;
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+} */
+
+.table thead th {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    vertical-align: middle;
+}

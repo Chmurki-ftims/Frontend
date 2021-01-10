@@ -1,0 +1,8 @@
+/* form {
+    justify-content: center;
+} */
+
+.head > * {
+    font-weight: bold;
+    font-size: 20px;
+}
