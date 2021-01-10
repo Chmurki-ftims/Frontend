@@ -5,7 +5,7 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  // Redirect,
+  Redirect,
 } from "react-router-dom";
 import About from "./components/About";
 import CalculatorB2B from "./components/CalculatorB2B";
@@ -44,7 +44,7 @@ export default function App() {
 
   return (
     <Router>
-      {/* {((isLogged) => <Redirect to={isLogged ? "/home" : "/auth"} />)(isAuth)}   */}
+      {((isLogged) => <Redirect to={isLogged ? "/home" : "/auth"} />)(isAuth)}  
 
       <Switch>
         <Route path="/auth" render={
