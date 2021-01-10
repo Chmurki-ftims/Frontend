@@ -7,9 +7,9 @@ import Auth from '@aws-amplify/auth'
 export default function LogInOut(props: any) {
   return (
     <div className={"d-flex align-items-center flex-column flex-md-row " + styles.controller}>
-      <Link className={styles.link} to="/auth" onClick={() => {Auth.signOut()}}>Wyloguj</Link>
+      <Link className={styles.link} to="/auth" onClick={() => {Auth.signOut()}}>Nazwa użytkownika</Link>
       <span className={"d-none d-md-block " + styles.span}></span>
-      <Link className={styles.link} to="/auth">Załóż konto</Link>
+      <Link className={styles.link} to="/auth">Wyloguj</Link>
     </div>
   )
 }

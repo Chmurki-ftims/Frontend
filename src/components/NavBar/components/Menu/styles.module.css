@@ -1,10 +1,6 @@
 .link {
     font-size: 24px;
     color: #ffffff;
-    transition: .5s all;
+    transition: .5s all;    
 }
 
-.link:hover {
-    color: #2155fb;
-    text-decoration: none;
-}

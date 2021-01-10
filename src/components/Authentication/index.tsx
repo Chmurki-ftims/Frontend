@@ -82,7 +82,7 @@ export default function Authentication (props: AuthenticationProps) {
             <ThemeProvider theme={theme}>
                 {!isDesire ? 
                     <TextField name="fullname" 
-                               label="Full name" 
+                               label="Imię i nazwisko" 
                                InputLabelProps={{className: classes.root}}
                                InputProps={{ className: classes.root + ' ' + classes.input }} 
                                onChange={(event) => {setName(event.target.value)}} 
@@ -102,7 +102,7 @@ export default function Authentication (props: AuthenticationProps) {
                 <TextField className="mt-2" 
                            type="password" 
                            name="password" 
-                           label="Password" 
+                           label="Hasło" 
                            InputLabelProps={{className: classes.root}}
                            InputProps={{ className: classes.root + ' ' + classes.input}}
                            onChange={(event)=> {setPassword(event.target.value)}}
@@ -112,7 +112,7 @@ export default function Authentication (props: AuthenticationProps) {
                     <TextField className="mt-2" 
                                name="passwordconfirm"
                                type="password"
-                               label="Confirm password"
+                               label="Potwierdź hasło"
                                InputLabelProps={{className: classes.root}}
                                InputProps={{ className: classes.root + ' ' + classes.input}}
                                onChange={(event) => {setPasswordConfirm(event.target.value)}}
@@ -126,13 +126,13 @@ export default function Authentication (props: AuthenticationProps) {
                             className="col col-md-6"
                             color="primary"
                             variant="contained"
-                            onClick={isDesire ? handleLogIn : handleSignUp}>{isDesire ? 'Log in' : 'Sign up'}</Button>
+                            onClick={isDesire ? handleLogIn : handleSignUp}>{isDesire ? 'Zaloguj' : 'Zarejestruj'}</Button>
 
                     <Button style={{height: '45px'}} 
                             className="col col-md-5 mt-2 mt-md-0"
                             color="secondary"
                             variant="contained"
-                            onClick={() => { handleSwith() }} >{ isDesire ? "I don't have an account" : "I already have an account"}</Button>
+                            onClick={() => { handleSwith() }} >{ isDesire ? "Nie mam konta" : "Mam już konto"}</Button>
                 </div>
             </ThemeProvider>
         )
