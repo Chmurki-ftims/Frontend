@@ -7,6 +7,7 @@ phases:
       - npm install @material-ui/core
       - npm install @types/material-ui
       - npm install react-router-dom
+      - npm install @material-ui/icons
   build:
     commands:
       - npm run build
