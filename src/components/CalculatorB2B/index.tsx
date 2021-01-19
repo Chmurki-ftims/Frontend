@@ -400,9 +400,6 @@ export default function CalculatorB2B(props: any) {
   };
 
   const { sicknessInsurance, healthInsurance } = insurance;
-  const error =
-    [sicknessInsurance, healthInsurance].filter((v) => v).length !== 2;
-  //
   return (
     <div className="container-fluid page">
       <div className="form-row">
