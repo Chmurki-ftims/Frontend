@@ -5,7 +5,6 @@ import {
   Theme,
   withStyles,
 } from "@material-ui/core/styles";
-import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
 import "./styles.css";
 import Box from "@material-ui/core/Box";
 import Collapse from "@material-ui/core/Collapse";
@@ -29,6 +28,11 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormLabel from "@material-ui/core/FormLabel";
+import FormControl from "@material-ui/core/FormControl";
 
 const ColorButton = withStyles((theme: Theme) => ({
   root: {
@@ -110,13 +114,9 @@ function Row(props: { row: ReturnType<typeof createData> }) {
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </StyledTableCell>
-        <StyledTableCell component="th" scope="row">
-          {row.month}
-        </StyledTableCell>
-        <StyledTableCell align="right">{row.income_all}</StyledTableCell>
-        {/* <TableCell align="right">{row.income_all}</TableCell> */}
-        {/* <TableCell align="right">{row.carbs}</TableCell>
-        <TableCell align="right">{row.protein}</TableCell> */}
+        <StyledTableCell component="th" scope="row"> {row.month} </StyledTableCell>
+        <StyledTableCell align="center"> {row.income_all} </StyledTableCell>
+        <StyledTableCell align="center">result</StyledTableCell>
       </StyledTableRow>
 
       <TableRow>
@@ -195,9 +195,7 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                         {incomeRow.id}
                       </TableCell>
                       <TableCell>{incomeRow.title}</TableCell>
-                      <TableCell align="right">
-                        {incomeRow.value}
-                      </TableCell>
+                      <TableCell align="right">{incomeRow.value}</TableCell>
                       <TableCell align="right">
                         <IconButton aria-label="add to shopping cart">
                           <RemoveCircleOutlineOutlinedIcon />
@@ -245,13 +243,13 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function CalculatorUOP(props: any) {
   const classes = useStyles();
-  //etat
-  const [dayJob, setDayJob] = React.useState("");
+  //wiek
+  const [value, setValue] = React.useState("Tak");
 
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setDayJob(event.target.value as string);
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValue((event.target as HTMLInputElement).value);
   };
-  // etat koniec
+  //
 
   return (
     <div className="container-fluid page">
@@ -259,92 +257,24 @@ export default function CalculatorUOP(props: any) {
         <div className="col-3 col-sm-3 col-md-3 col-lg-3 col-xl-3">
           <div className="row justify-content-center">
             <FormControl
-              variant="outlined"
+              component="fieldset"
+              // variant="outlined"
               className={classes.formControl}
               fullWidth
             >
-              <InputLabel id="demo-simple-select-outlined-label">
-                Etat
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-outlined-label"
-                id="demo-simple-select-outlined"
-                value={dayJob}
+              <FormLabel component="legend">
+                Czy masz mniej niż 26 lat?
+              </FormLabel>
+              <RadioGroup
+                aria-label="age"
+                name="age1"
+                value={value}
                 onChange={handleChange}
-                label="dayJob"
               >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-                <MenuItem value={1}>Pełny etat</MenuItem>
-                <MenuItem value={1 / 2}>1/2 etatu</MenuItem>
-                <MenuItem value={2 / 3}>2/3 etatu </MenuItem>
-              </Select>
+                <FormControlLabel value="yes" control={<Radio />} label="Tak" />
+                <FormControlLabel value="no" control={<Radio />} label="Nie" />
+              </RadioGroup>
             </FormControl>
-            {/* <label htmlFor="contribution">
-                  <b>Składka:</b>
-                </label>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    name="labourFund"
-                    id="contribution1"
-                    value="option1"
-                  />
-                  <label className="form-check-label" htmlFor="contribution1">
-                    Fundusz pracy
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    name="employmentFundContribution"
-                    id="contribution2"
-                    value="option2"
-                  />
-                  <label
-                    className="form-check-label"
-                    htmlFor="contribution2"
-                    style={{ marginBottom: "8px" }}
-                  >
-                    FGŚP
-                  </label>
-                </div>
-
-                <label htmlFor="age">
-                  <b>Czy skończyłeś 26 lat?</b>
-                </label>
-                <div className="custom-control custom-radio custom-control-inline">
-                  <input
-                    type="radio"
-                    id="customRadioInline1"
-                    name="customRadioInline1"
-                    className="custom-control-input"
-                  />
-                  <label
-                    className="custom-control-label"
-                    htmlFor="customRadioInline1"
-                  >
-                    Tak, mam więcej niż 26 lat
-                  </label>
-                </div>
-                <div className="custom-control custom-radio custom-control-inline">
-                  <input
-                    type="radio"
-                    id="customRadioInline2"
-                    name="customRadioInline1"
-                    className="custom-control-input"
-                  />
-                  <label
-                    className="custom-control-label"
-                    htmlFor="customRadioInline2"
-                    style={{ marginBottom: "8px" }}
-                  >
-                    Nie, mam mniej niż 26 lat
-                  </label>
-                </div> */}
           </div>
           <ColorButton
             variant="contained"
@@ -364,9 +294,8 @@ export default function CalculatorUOP(props: any) {
                   <TableRow className="head">
                     <StyledTableCell />
                     <StyledTableCell>Miesiąc</StyledTableCell>
-                    <StyledTableCell align="right">
-                      Dochód brutto
-                    </StyledTableCell>
+                    <StyledTableCell align="center"> Dochód brutto </StyledTableCell>
+                    <StyledTableCell align="center"> Dochód netto </StyledTableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>

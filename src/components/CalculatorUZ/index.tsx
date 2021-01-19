@@ -29,7 +29,11 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormLabel from "@material-ui/core/FormLabel";
+import FormControl from "@material-ui/core/FormControl";
 
 const ColorButton = withStyles((theme: Theme) => ({
   root: {
@@ -114,10 +118,8 @@ function Row(props: { row: ReturnType<typeof createData> }) {
         <StyledTableCell component="th" scope="row">
           {row.month}
         </StyledTableCell>
-        <StyledTableCell align="right">{row.income_all}</StyledTableCell>
-        {/* <TableCell align="right">{row.income_all}</TableCell> */}
-        {/* <TableCell align="right">{row.carbs}</TableCell>
-        <TableCell align="right">{row.protein}</TableCell> */}
+        <StyledTableCell align="center">{row.income_all}</StyledTableCell>
+        <StyledTableCell align="center">result</StyledTableCell>
       </StyledTableRow>
 
       <StyledTableRow>
@@ -154,8 +156,10 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                         </DialogTitle>
                         <DialogContent>
                           <DialogContentText>
-                            Aby obliczyć swój dochód netto oraz zobaczyć ile pieniędzy odprowadzane jest
-                            na daną składkę, uzupełnij poniższe pola dla i wciśnij przycisk 'Oblicz'.
+                            Aby obliczyć swój dochód netto oraz zobaczyć ile
+                            pieniędzy odprowadzane jest na daną składkę,
+                            uzupełnij poniższe pola dla i wciśnij przycisk
+                            'Oblicz'.
                           </DialogContentText>
                           <TextField
                             autoFocus
@@ -230,150 +234,105 @@ const rows = [
   createData("Grudzień", 4700),
 ];
 
-// const useStyles = makeStyles((theme: Theme) =>
-//   createStyles({
-//     formControl: {
-//       margin: theme.spacing(1),
-//       // minWidth: 250,
-//     },
-//     selectEmpty: {
-//       marginTop: theme.spacing(2),
-//     },
-//   })
-// );
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    formControl: {
+      margin: theme.spacing(1),
+      // minWidth: 250,
+    },
+    selectEmpty: {
+      marginTop: theme.spacing(2),
+    },
+  })
+);
+
 export default function CalculatorUZ(props: any) {
-  
+  const classes = useStyles();
+  //wiek
+  const [value, setValue] = React.useState("Tak");
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValue((event.target as HTMLInputElement).value);
+  };
+  //
+
   return (
     <div className="container-fluid page">
       <div className="form-row">
         <div className="col-3">
           <div className="form-row">
             <div className="row justify-content-center">
-              <form>
-                <div className="form-group">
-                  <label htmlFor="taxThreshold">
-                    <b>Próg podatkowy:</b>
-                  </label>
-                  <select className="form-control" id="taxThreshold">
-                    <option>Pierwszy</option>
-                    <option>Drugi</option>
-                  </select>
-                </div>
+              <FormControl
+                component="fieldset"
+                // variant="outlined"
+                className={classes.formControl}
+                fullWidth
+              >
 
-                <label htmlFor="contribution">
-                  <b>Składka:</b>
-                </label>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    name="pensionablePay"
-                    id="contribution1"
-                    value="option1"
+                <FormLabel component="legend">
+                  Czy masz mniej niż 26 lat?
+                </FormLabel>
+                <RadioGroup
+                  aria-label="age"
+                  name="age1"
+                  value={value}
+                  onChange={handleChange}
+              >
+                  <FormControlLabel
+                    value="yes"
+                    control={<Radio />}
+                    label="Tak"
                   />
-                  <label className="form-check-label" htmlFor="contribution1">
-                    Emerytalna
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    name="socialPension"
-                    id="contribution2"
-                    value="option2"
+                  <FormControlLabel
+                    value="no"
+                    control={<Radio />}
+                    label="Nie"
                   />
-                  <label className="form-check-label" htmlFor="contribution2">
-                    Rentowa
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    name="Sickness"
-                    id="contribution3"
-                    value="option3"
-                  />
-                  <label className="form-check-label" htmlFor="contribution3">
-                    Chorobowa
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    name="accidentInsurance"
-                    id="contribution4"
-                    value="option4"
-                  />
-                  <label className="form-check-label" htmlFor="contribution4">
-                    Wypadkowa
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    name="healthInsurance"
-                    id="contribution5"
-                    value="option5"
-                  />
-                  <label className="form-check-label" htmlFor="contribution5">
-                    Zdrowotna
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    name="labourFund"
-                    id="contribution6"
-                    value="option6"
-                  />
-                  <label className="form-check-label" htmlFor="contribution6">
-                    Fundusz pracy
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    name="employmentFundContribution"
-                    id="contribution7"
-                    value="option7"
-                  />
-                  <label
-                    className="form-check-label"
-                    htmlFor="contribution7"
-                    style={{ marginBottom: "8px" }}
-                  >
-                    FGŚP
-                  </label>
-                </div>
+                </RadioGroup>
 
-              </form>
+                <FormLabel component="legend">
+                    Koszt uzyskania przychodu:
+                </FormLabel>
+                <RadioGroup
+                  aria-label="tax_cost"
+                  name="tax_cost1"
+                  value={value}
+                  onChange={handleChange}
+                >
+                  <FormControlLabel
+                    value="0.2"
+                    control={<Radio />}
+                    label="0,2%"
+                  />
+                  <FormControlLabel
+                    value="0.5"
+                    control={<Radio />}
+                    label="0.5%"
+                  />
+                </RadioGroup>
+              </FormControl>
             </div>
             <ColorButton
-            variant="contained"
-            color="primary"
-            size="large"
-            fullWidth
-          >
-            Oblicz
-          </ColorButton>
+              variant="contained"
+              color="primary"
+              size="large"
+              fullWidth
+            >
+              Oblicz
+            </ColorButton>
           </div>
         </div>
 
         <div className="col-9">
           <div className="table-responsive">
-          <TableContainer component={Paper}>
+            <TableContainer component={Paper}>
               <Table aria-label="collapsible table">
                 <TableHead>
                   <TableRow>
-                    <TableCell />
-                    <TableCell>Miesiąc</TableCell>
-                    <TableCell align="right">Dochód brutto</TableCell>
+                    <StyledTableCell />
+                    <StyledTableCell>Miesiąc</StyledTableCell>
+                    <StyledTableCell align="center">Dochód brutto </StyledTableCell>
+                    <StyledTableCell align="center"> Dochód netto </StyledTableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>

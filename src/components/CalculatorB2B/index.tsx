@@ -29,6 +29,16 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormLabel from "@material-ui/core/FormLabel";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import Checkbox from "@material-ui/core/Checkbox";
+import FormGroup from "@material-ui/core/FormGroup";
 
 const ColorButton = withStyles((theme: Theme) => ({
   root: {
@@ -130,11 +140,9 @@ function Row(props: { row: ReturnType<typeof createData> }) {
         <StyledTableCell component="th" scope="row">
           {row.month}
         </StyledTableCell>
-        <StyledTableCell align="right">{row.costs_all}</StyledTableCell>
-        <StyledTableCell align="right">{row.revenue_all}</StyledTableCell>
-        {/* <TableCell align="right">{row.income_all}</TableCell> */}
-        {/* <TableCell align="right">{row.carbs}</TableCell>
-      <TableCell align="right">{row.protein}</TableCell> */}
+        <StyledTableCell align="center">{row.costs_all}</StyledTableCell>
+        <StyledTableCell align="center">{row.revenue_all}</StyledTableCell>
+        <StyledTableCell align="center">result</StyledTableCell>
       </StyledTableRow>
 
       <TableRow>
@@ -339,124 +347,134 @@ const rows = [
   createData("Marzec", 6600, 500),
   createData("Kwiecień", 4500, 1000),
   createData("Maj", 4700, 2000),
-  createData("Czerwiec", 6000,1444),
-  createData("Lipice", 5800,1596),
+  createData("Czerwiec", 6000, 1444),
+  createData("Lipice", 5800, 1596),
   createData("Sierpień", 6600, 1234),
-  createData("Wrzesień", 4500,784),
-  createData("Październik", 4700,1452),
-  createData("Listopad", 4700,2666),
-  createData("Grudzień", 4700,1000),
+  createData("Wrzesień", 4500, 784),
+  createData("Październik", 4700, 1452),
+  createData("Listopad", 4700, 2666),
+  createData("Grudzień", 4700, 1000),
 ];
 
-// const useStyles = makeStyles((theme: Theme) =>
-//   createStyles({
-//     formControl: {
-//       margin: theme.spacing(1),
-//       minWidth: 250,
-//     },
-//     selectEmpty: {
-//       marginTop: theme.spacing(2),
-//     },
-//   })
-// );
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    formControl: {
+      margin: theme.spacing(1),
+    },
+    selectEmpty: {
+      marginTop: theme.spacing(2),
+    },
+  })
+);
 
 export default function CalculatorB2B(props: any) {
+  const classes = useStyles();
+  //praca w miejscu zamieszkania
+  const [value, setValue] = React.useState("Tak");
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValue((event.target as HTMLInputElement).value);
+  };
+  //
+
+  //podatek
+  const [taxType, setTaxType] = React.useState("");
+
+  const handleChangeTaxType = (
+    event: React.ChangeEvent<{ value: unknown }>
+  ) => {
+    setTaxType(event.target.value as string);
+  };
+  //
+
+  //ubezpieczenie
+  const [insurance, setInsurance] = React.useState({
+    sicknessInsurance: false,
+    healthInsurance: false,
+  });
+
+  const handleChangeInsurance = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setInsurance({ ...insurance, [event.target.name]: event.target.checked });
+  };
+
+  const { sicknessInsurance, healthInsurance } = insurance;
+  const error =
+    [sicknessInsurance, healthInsurance].filter((v) => v).length !== 2;
+  //
   return (
     <div className="container-fluid page">
       <div className="form-row">
         <div className="col-3">
           <div className="form-row">
             <div className="row justify-content-center">
-              <form>
-                <div className="form-group">
-                  <label htmlFor="taxYear">
-                    <b>Rok podatkowy:</b>
-                  </label>
-                  <select className="form-control" id="taxYear">
-                    <option>2020</option>
-                    <option disabled>2021</option>
-                  </select>
-                </div>
-                <div className="form-group">
-                  <label htmlFor="taxType">
-                    <b>Typ podatku:</b>
-                  </label>
-                  <select className="form-control" id="taxType">
-                    <option>Podatek liniowy</option>
-                    <option>Podatek progresywny</option>
-                  </select>
-                </div>
+              <FormControl
+                variant="outlined"
+                className={classes.formControl}
+                fullWidth
+              >
+                <FormGroup>
+                  <InputLabel id="legend">
+                    Podatek
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={taxType}
+                    onChange={handleChangeTaxType}
+                    label="taxType"
+                  >
+                    <MenuItem value={"liniowy"}>liniowy</MenuItem>
+                    <MenuItem value={"progresywny"}>progresywny </MenuItem>
+                  </Select>
 
-                <div className="check">
-                  <label htmlFor="contribution">
-                    <b>Składka:</b>
-                  </label>
-                  <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      name="pensionablePay"
-                      id="contribution1"
-                      value="option1"
+                  <FormLabel component="legend">
+                    Czy pracujesz w miejscu zamieszkania?
+                  </FormLabel>
+                  <RadioGroup
+                    aria-label="work-place"
+                    name="work-place1"
+                    value={value}
+                    onChange={handleChange}
+                  >
+                    <FormControlLabel
+                      value="yes"
+                      control={<Radio />}
+                      label="Tak"
                     />
-                    <label className="form-check-label" htmlFor="contribution1">
-                      Emerytalna
-                    </label>
-                  </div>
-                  <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      name="socialPension"
-                      id="contribution2"
-                      value="option2"
+                    <FormControlLabel
+                      value="no"
+                      control={<Radio />}
+                      label="Nie"
                     />
-                    <label className="form-check-label" htmlFor="contribution2">
-                      Rentowa
-                    </label>
-                  </div>
-                  <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      name="Sickness"
-                      id="contribution3"
-                      value="option3"
-                    />
-                    <label className="form-check-label" htmlFor="contribution3">
-                      Chorobowa
-                    </label>
-                  </div>
-                  <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      name="healthInsurance"
-                      id="contribution4"
-                      value="option4"
-                    />
-                    <label className="form-check-label" htmlFor="contribution4">
-                      Zdrowotna
-                    </label>
-                  </div>
-                  <div className="form-check">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      name="deductible"
-                      id="contribution5"
-                      value="option5"
-                    />
-                    <label
-                      className="form-check-label"
-                      htmlFor="contribution5"
-                      style={{ marginBottom: "8px" }}
-                    >
-                      Podlegająca odliczeniu
-                    </label>
-                  </div>
-                </div>
-              </form>
+                  </RadioGroup>
+
+                  <FormLabel component="legend">Składka:</FormLabel>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        color="primary"
+                        checked={sicknessInsurance}
+                        onChange={handleChangeInsurance}
+                        name="sicknessInsurance"
+                      />
+                    }
+                    label="Chorobowe"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        color="primary"
+                        checked={healthInsurance}
+                        onChange={handleChangeInsurance}
+                        name="healthInsurance"
+                      />
+                    }
+                    label="Zdrowotne"
+                  />
+                </FormGroup>
+              </FormControl>
             </div>
             <ColorButton
               variant="contained"
@@ -477,8 +495,9 @@ export default function CalculatorB2B(props: any) {
                   <TableRow>
                     <StyledTableCell />
                     <StyledTableCell>Miesiąc</StyledTableCell>
-                    <StyledTableCell align="right">Koszty</StyledTableCell>
-                    <StyledTableCell align="right">Przychód</StyledTableCell>
+                    <StyledTableCell align="center">Koszty</StyledTableCell>
+                    <StyledTableCell align="center">Przychód</StyledTableCell>
+                    <StyledTableCell align="center"> Dochód netto </StyledTableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
