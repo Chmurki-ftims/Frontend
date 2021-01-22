@@ -17,6 +17,7 @@
     font-family: Arial, Helvetica, sans-serif;
     font-weight: bold;
     transition: .5s all;
+    cursor: pointer;
 }
 
 .link:hover {

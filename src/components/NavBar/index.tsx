@@ -4,11 +4,18 @@ import Menu from "./components/Menu"
 import LoginController from "./components/LoginController"
 import Logo from '../Logo'
 
-export default function NavBar(props: any) {
+import {UserProps} from '../interfaces'
+
+export interface NavBarProps {
+  user: null | UserProps,
+  onSignOut(): void
+}
+
+export default function NavBar(props: NavBarProps) {
   return (
     <nav>
       <Link className="d-flex d-md-inline justify-content-center justify-content-md-start" to="/home"><Logo width="300" height="100" size="small" /></Link>
-      <LoginController />
+      <LoginController user={props.user} onSignOut={props.onSignOut}/>
       <Menu />
     </nav>
   );

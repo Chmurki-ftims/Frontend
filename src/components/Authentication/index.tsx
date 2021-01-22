@@ -5,11 +5,22 @@ import React, {useState, Dispatch, SetStateAction} from 'react';
 import './styles.css';
 import Logo from '../Logo';
 import {ThemeProvider, makeStyles} from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import theme from '../theme';
+import {
+    Button,
+    TextField,
+    CircularProgress,
+    Box,
+    Fade
+} from '@material-ui/core';
 
-import Auth from '@aws-amplify/auth';
+import {useHistory} from 'react-router-dom';
+
+import theme from '../theme';
+import { UserProps } from '../interfaces';
+import {
+    signIn, 
+    signUp
+} from '../../service/auth'
 
 const textFieldStyles = makeStyles({
     root: {
@@ -28,17 +39,19 @@ const textFieldStyles = makeStyles({
 
 interface AuthenticationProps {
     isDesireToLogIn?: boolean,
-    onLogIn(): void,
-    onSignUp(): void
+    onSignIn(user: UserProps): void,
+    onSignUp(user: UserProps): void
 }
 
 export default function Authentication (props: AuthenticationProps) {
+    const history = useHistory()
     // state
     let [wantToLogIn, setDesireToLogIn]: [boolean, Dispatch<SetStateAction<boolean>>] = useState((props.isDesireToLogIn !== undefined) ? props.isDesireToLogIn : true);
     let [name, setName] = useState('');
     let [email, setEmail] = useState('');
     let [password, setPassword] = useState('');
     let [passwordConfirm, setPasswordConfirm] = useState('');
+    const [loading, setLoading] = useState(false)
     // end state
 
     // methods
@@ -47,33 +60,69 @@ export default function Authentication (props: AuthenticationProps) {
         setEmail('');
         setPassword('');
         setPasswordConfirm('');
-
         setDesireToLogIn(!wantToLogIn);
     }
 
-    const handleLogIn = () => {
-        Auth.signIn(email, password)
-	            .then(success => {
-                        console.log('successful sign in')
-                        props.onLogIn()
-                    })
-	            .catch(err => console.log(err));
+    const handleSignIn = () => {
+        setLoading(true)
+        signIn(email, password).then(data => {
+                if (data) {
+                const {
+                    attributes: {
+                        email: AWSemail,
+                        email_verified: isConfirmed,
+                        nickname: AWSfullname
+                    },
+                    pool: {
+                        clientId: id
+                    }
+                } = data
+
+                props.onSignIn({
+                    id: id,
+                    email: AWSemail,
+                    fullname: AWSfullname,
+                    isConfirmed: isConfirmed
+                })
+                setLoading(false)
+                history.push('/home')
+            } else {
+                alert('Wystąpil bład, zweryfikuj podane email oraz hasło')
+                setLoading(false)
+            }
+        })
+
+        // props.onSignIn(null)
     }
 
     function handleSignUp() {
-                Auth.signUp({
-	                    username: email,
-	                    password: password,
-	                    attributes: {
-                            nickname: name, 
-	            },
-        }).then(success => {
-                        console.log('successful sign up')
-                    })
-	            .catch(err => console.log(err));
+        setLoading(true)
+        signUp(name,email,password).then(data => {
+            if (data) {
+                const {
+                    user: {
+                        pool: {
+                            clientId: id
+                        },
+                        username: AWSemail
+                    },
+                    userConfirmed: isConfirmed
+                } = data             
 
+                props.onSignUp({
+                    id: id,
+                    email: AWSemail,
+                    fullname: name,
+                    isConfirmed: isConfirmed
+                })
+                setLoading(false)
+                history.push('/emailconfirm')
+            } else {
+                alert('Wystąpił bład')
+                setLoading(false)
+            }
+        })   
     }
-    // end methods
 
     const classes = textFieldStyles();
 
@@ -126,7 +175,7 @@ export default function Authentication (props: AuthenticationProps) {
                             className="col col-md-6"
                             color="primary"
                             variant="contained"
-                            onClick={isDesire ? handleLogIn : handleSignUp}>{isDesire ? 'Zaloguj' : 'Zarejestruj'}</Button>
+                            onClick={isDesire ? handleSignIn : handleSignUp}>{isDesire ? 'Zaloguj' : 'Zarejestruj'}</Button>
 
                     <Button style={{height: '45px'}} 
                             className="col col-md-5 mt-2 mt-md-0"
@@ -139,16 +188,33 @@ export default function Authentication (props: AuthenticationProps) {
     };
     
     return (
-        <div className="login-screen d-flex p-2 flex-column flex-md-row justify-content-center align-items-center">
-            <div className="d-flex justify-content-center align-items-center col col-lg-5">
-                <Logo width="100%" height="auto" size="big"/>
-            </div>
+        <>
+            <div className="login-screen d-flex p-2 flex-column flex-md-row justify-content-center align-items-center">
+                <div className="d-flex justify-content-center align-items-center col col-lg-5">
+                    <Logo width="100%" height="auto" size="big"/>
+                </div>
 
-            <div className="d-flex justify-content-center align-items-center col col-lg-7">
-                <form className="d-flex flex-column flex-fill">
-                    {showForm(wantToLogIn)}                    
-                </form>
+                <div className="d-flex justify-content-center align-items-center col col-lg-7">
+                    <form className="d-flex flex-column flex-fill">
+                        {showForm(wantToLogIn)}                    
+                    </form>
+                </div>
             </div>
-        </div>
-    );
+             
+            <Fade in={loading}>
+                <Box 
+                    className="d-flex justify-content-center align-items-center"  
+                    style={{
+                        position: 'absolute',
+                        top: 0,
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        width: '100%', 
+                        height: '100vh', 
+                        backgroundColor: 'rgba(255,255,255,0.5)'
+                }}><CircularProgress /></Box>
+            </Fade>
+        </>
+    )
 }

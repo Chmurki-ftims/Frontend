@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import Authentication from "./components/Authentication";
 import {
@@ -6,6 +6,7 @@ import {
   Switch,
   Route,
   Redirect,
+  useHistory,
 } from "react-router-dom";
 import About from "./components/About";
 import CalculatorB2B from "./components/CalculatorB2B";
@@ -13,46 +14,78 @@ import CalculatorUOP from "./components/CalculatorUOP";
 import CalculatorUZ from "./components/CalculatorUZ";
 import Comparator from "./components/Comparator";
 import NavBar from './components/NavBar';
-import Auth from '@aws-amplify/auth';
+import {UserProps} from './components/interfaces'
+import ThankfulPage from "./components/ThankfulPage";
+
+import {
+  getCurrentUser,
+  signOut
+} from './service/auth'
+
 export default function App() {
   //state
+  const [mounted, setMounted]: [boolean, any] = useState(true)
+  const [user, setUser]: [null | UserProps, any] = useState(null)
+  const history = useHistory()
+  
+  useEffect(() => {
+    if (mounted) {
+      getCurrentUser().then(data => {
+        if (data) {
+          const {
+            aud: id,
+            email,
+            nickname: fullname
+          } = data.idToken.payload
 
-  let [isAuth, setAuth]: [boolean, any] = useState(false);
+          setUser({
+            id: id,
+            email: email,
+            fullname: fullname
+          })
+        }
+      })
+    }  return () => {setMounted(false)}
+  },[mounted])
 
-  Auth.currentAuthenticatedUser()
-    .then(user => {
-        console.log('successful reconnected')
-        console.log(user);
-        setAuth(true)
+
+  //methods
+  const handleSignIn = (user: UserProps) => {
+    setUser(user)
+  }
+
+  const handleSignUp = (user: UserProps) => {
+    setUser(user)
+  }
+
+  const handleSignOut = () => {
+    signOut().then(() => {
+      setUser(null)
     })
-    .catch(err => {
-        console.log(err);
-    });
-
-  //state
-
-  //methods
-  function handleLogIn() {
-    setAuth(!isAuth);
   }
-
-  function handleSignUp() {
-    setAuth(!isAuth);
-  }
-
-  //methods
+  
 
   return (
     <Router>
-      {((isLogged) => <Redirect to={isLogged ? "/home" : "/auth"} />)(isAuth)}  
+      <Redirect to={user ? "/home" : "/auth"} />
 
       <Switch>
         <Route path="/auth" render={
-          (props) => (<Authentication {...props} onLogIn={handleLogIn}  onSignUp={handleSignUp} />) 
+          (props) => (<Authentication {...props} onSignIn={handleSignIn}  onSignUp={handleSignUp} />) 
         } /> 
-          
+
+        <Route path="/emailconfirm">
+          <div className="row d-flex justify-content-center align-items-center text-light" style={{width: '100%', height: '100vh'}}>
+            <h2>Potwierdź email, żebyś zmógł korzystać ze swojego konta</h2>
+          </div>
+        </Route>  
+
+        <Route path="/confirmed">
+          <ThankfulPage />
+        </Route>
+
         <Route path="/home">
-          <NavBar/>
+          <NavBar user={user} onSignOut={handleSignOut}/>
           <Route exact path="/home/" component={About} />
           <Route path="/home/b2b" component={CalculatorB2B} />
           <Route path="/home/uop" component={CalculatorUOP} />
