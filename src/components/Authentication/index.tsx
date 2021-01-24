@@ -21,6 +21,7 @@ import {
     signIn, 
     signUp
 } from '../../service/auth'
+import createTable from '../../service/user'
 
 const textFieldStyles = makeStyles({
     root: {
@@ -115,8 +116,15 @@ export default function Authentication (props: AuthenticationProps) {
                     fullname: name,
                     isConfirmed: isConfirmed
                 })
-                setLoading(false)
-                history.push('/emailconfirm')
+
+                createTable(id).then(data => {
+                    setLoading(false)
+                    history.push('/emailconfirm')
+                }, err => {
+                    console.log(err)
+                    alert('Wystąpił bład')
+                    setLoading(false)
+                })
             } else {
                 alert('Wystąpił bład')
                 setLoading(false)

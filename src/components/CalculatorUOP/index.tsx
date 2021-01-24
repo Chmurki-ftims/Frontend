@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {
   createStyles,
   makeStyles,
@@ -33,6 +33,24 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormLabel from "@material-ui/core/FormLabel";
 import FormControl from "@material-ui/core/FormControl";
+import { UserProps } from "../interfaces";
+
+import UOP from '../../service/uop'
+
+const months:any = {
+  'Styczeń': 0,
+  'Luty': 1,
+  'Marzec': 2,
+  'Kwiecień': 3,
+  'Maj': 4,
+  'Czerwiec': 5,
+  'Lipice': 6,
+  'Sierpień': 7,
+  'Wrzesień': 8,
+  'Październik': 9,
+  'Listopad': 10,
+  'Grudzień': 11,
+}
 
 const ColorButton = withStyles((theme: Theme) => ({
   root: {
@@ -74,21 +92,33 @@ const useRowStyles = makeStyles({
   },
 });
 
-function createData(month: string, income_all: number) {
-  return {
-    month,
-    income_all,
-    income: [
-      { id: "1", title: "Pensja", value: 5000 },
-      { id: "2", title: "Premia", value: 1000 },
-    ],
-  };
-}
+// function createData(month: string, income_all: number) {
+//   return {
+//     month,
+//     income_all,
+//     income: [
+//       { id: "1", title: "Pensja", value: 5000 },
+//       { id: "2", title: "Premia", value: 1000 },
+//     ],
+//   };
+// }
 
-function Row(props: { row: ReturnType<typeof createData> }) {
-  const { row } = props;
+function Row(props: {month: string, user_id: string, data: Array<any>, calculated: number | string, onDataChange(): void}) {
+  // const { row } = props;
   const [open, setOpen] = React.useState(false);
   const classes = useRowStyles();
+
+
+  const [title, setTitle] = useState('')
+  const [costValue, setCostValue]: [number, any] = useState(0)
+
+  const handleTitleChange = (event: React.ChangeEvent<{value: unknown}>) => {
+    setTitle(event.target.value as string)
+  }
+
+  const handleCostValueChange = (event: React.ChangeEvent<{value: unknown}>) => {
+    setCostValue(event.target.value as number)
+  }
 
   // dialog add koniec
   const [openDialog, setopenDialog] = React.useState(false);
@@ -98,12 +128,38 @@ function Row(props: { row: ReturnType<typeof createData> }) {
   };
 
   const handleClose = () => {
+    setCostValue(0)
+    setTitle('')
     setopenDialog(false);
   };
+
+  const handleConfirm = () => {
+    UOP.create(
+      props.user_id ? props.user_id : '',
+      months[props.month],
+      costValue,
+      title
+    ).then(data => {
+      alert('Dane zostały dodane')
+      props.onDataChange()
+      handleClose()
+    })
+  }
+
+  const handleDelete = (id: string) => {
+    let answer: boolean = window.confirm('Czy na pewno chcesz wycofać ten wpis?')
+
+    if(answer) {
+      UOP.delete(props.user_id, id).then(data => {
+        alert('Wycofane :)')
+        props.onDataChange()
+      })
+    }
+  }
   // dialog add koniec
 
   return (
-    <React.Fragment>
+    <>
       <StyledTableRow className={classes.root}>
         <StyledTableCell>
           <IconButton
@@ -114,9 +170,9 @@ function Row(props: { row: ReturnType<typeof createData> }) {
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </StyledTableCell>
-        <StyledTableCell component="th" scope="row"> {row.month} </StyledTableCell>
-        <StyledTableCell align="center"> {row.income_all} </StyledTableCell>
-        <StyledTableCell align="center">result</StyledTableCell>
+        <StyledTableCell component="th" scope="row"> {props.month} </StyledTableCell>
+        <StyledTableCell align="center"> {props.data.reduce((acc: number, curr: any) => acc + curr.value, 0)} </StyledTableCell>
+        <StyledTableCell align="center"> {props.calculated} </StyledTableCell>
       </StyledTableRow>
 
       <TableRow>
@@ -132,7 +188,6 @@ function Row(props: { row: ReturnType<typeof createData> }) {
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
-                    <StyledTableCell>Nr</StyledTableCell>
                     <StyledTableCell>Tytuł</StyledTableCell>
                     <StyledTableCell align="right">Wartość</StyledTableCell>
                     <StyledTableCell align="right">
@@ -165,6 +220,8 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                             label="Tytuł"
                             type="text"
                             fullWidth
+                            value={title}
+                            onChange={handleTitleChange}
                           />
                           <TextField
                             margin="dense"
@@ -173,13 +230,15 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                             type="number"
                             inputProps={{ step: "300", min: "0" }}
                             fullWidth
+                            value={costValue}
+                            onChange={handleCostValueChange}
                           />
                         </DialogContent>
                         <DialogActions>
                           <Button onClick={handleClose} color="primary">
                             Anuluj
                           </Button>
-                          <Button onClick={handleClose} color="primary">
+                          <Button onClick={handleConfirm} color="primary">
                             Dodaj
                           </Button>
                         </DialogActions>
@@ -189,15 +248,12 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                 </TableHead>
 
                 <TableBody>
-                  {row.income.map((incomeRow) => (
-                    <TableRow key={incomeRow.id}>
-                      <TableCell component="th" scope="row">
-                        {incomeRow.id}
-                      </TableCell>
-                      <TableCell>{incomeRow.title}</TableCell>
-                      <TableCell align="right">{incomeRow.value}</TableCell>
+                  {props.data.map((item: any) => (
+                    <TableRow key={item.id}>
+                      <TableCell>{item.title}</TableCell>
+                      <TableCell align="right">{item.value}</TableCell>
                       <TableCell align="right">
-                        <IconButton aria-label="add to shopping cart">
+                        <IconButton aria-label="add to shopping cart" onClick={() => {handleDelete(item.id)}}>
                           <RemoveCircleOutlineOutlinedIcon />
                         </IconButton>
                         {/* {Math.round(incomeRow.value * row.price * 100) / 100} */}
@@ -210,24 +266,24 @@ function Row(props: { row: ReturnType<typeof createData> }) {
           </Collapse>
         </StyledTableCell>
       </TableRow>
-    </React.Fragment>
+    </>
   );
 }
 
-const rows = [
-  createData("Styczeń", 6000),
-  createData("Luty", 5800),
-  createData("Marzec", 6600),
-  createData("Kwiecień", 4500),
-  createData("Maj", 4700),
-  createData("Czerwiec", 6000),
-  createData("Lipice", 5800),
-  createData("Sierpień", 6600),
-  createData("Wrzesień", 4500),
-  createData("Październik", 4700),
-  createData("Listopad", 4700),
-  createData("Grudzień", 4700),
-];
+// const rows = [
+//   createData("Styczeń", 6000),
+//   createData("Luty", 5800),
+//   createData("Marzec", 6600),
+//   createData("Kwiecień", 4500),
+//   createData("Maj", 4700),
+//   createData("Czerwiec", 6000),
+//   createData("Lipice", 5800),
+//   createData("Sierpień", 6600),
+//   createData("Wrzesień", 4500),
+//   createData("Październik", 4700),
+//   createData("Listopad", 4700),
+//   createData("Grudzień", 4700),
+// ];
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -241,15 +297,74 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function CalculatorUOP(props: any) {
+export interface CalculatorUOPProps {
+  user: UserProps | null
+}
+
+export default function CalculatorUOP(props: CalculatorUOPProps) {
+  const [mounted, setMounted] = useState(true)
+  const [data, setData]: [Array<any>, any] = useState([])
+  const [calculated, setCalculated]: [Array<number | string>, any] = useState(new Array(12).fill('Nie obliczono'))
+
+  const handleCalculate = () => {
+    const newCalculated = Object.values(months).map((month: any, index: number) => {
+      const brutto = data.filter((item: any) => item.month === month).reduce((acc:number, curr: any) => acc + curr.value, 0)
+
+      if (!!brutto) {
+        const skl = brutto*0.1371
+
+        let res = brutto - skl
+
+        if (value === 'no') {
+          return res
+        }
+
+        res -= 250
+
+        let tax = res*0.17 - 43.76
+
+        tax -= (brutto - skl)*0.0775
+
+        res = brutto - skl - (res+250)*0.09 
+
+        return (res - tax).toFixed(2)
+
+    } return 0})    
+
+    setCalculated(newCalculated)
+  }
+
+  const getData = () => {
+    if (props.user) {
+      UOP.getAll(props.user.id).then(res => {
+        setData(res.data.body)
+      })
+    }
+  }
+
+  useEffect(() => {
+    if (mounted) {
+      getData()
+    }
+
+    return () => {setMounted(false)}
+  }, [mounted, props.user])
+
+  
+
+  const handleDataChange = () => {
+    getData()
+  }
+
   const classes = useStyles();
   //wiek
-  const [value, setValue] = React.useState("Tak");
+  const [value, setValue] = useState("yes");
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue((event.target as HTMLInputElement).value);
   };
   //
+
 
   return (
     <div className="container-fluid page">
@@ -281,9 +396,11 @@ export default function CalculatorUOP(props: any) {
             color="primary"
             size="large"
             fullWidth
+            onClick={(event) => {handleCalculate()}}
           >
             Oblicz
           </ColorButton>
+          <div className="mt-3">Dochód netto za cały rok: {calculated[0] === 'Nie obliczono' ? 'Nie obliczono' : calculated.reduce((acc: any, curr: any) => acc + Number(curr), 0)}</div>
         </div>
 
         <div className="col-9 col-sm-9 col-md-9 col-lg-9 col-xl-9">
@@ -299,8 +416,13 @@ export default function CalculatorUOP(props: any) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {rows.map((row) => (
-                    <Row key={row.month} row={row} />
+                  {Object.keys(months).map((month: string, index: number) => (
+                    <Row 
+                      user_id={props.user ? props.user.id : ''} 
+                      key={month} month={month} 
+                      data={data.filter((item: any) => item.month === months[month])} 
+                      onDataChange={handleDataChange}
+                      calculated={calculated[index]} />
                   ))}
                 </TableBody>
               </Table>

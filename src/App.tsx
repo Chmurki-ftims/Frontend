@@ -88,7 +88,9 @@ export default function App() {
           <NavBar user={user} onSignOut={handleSignOut}/>
           <Route exact path="/home/" component={About} />
           <Route path="/home/b2b" component={CalculatorB2B} />
-          <Route path="/home/uop" component={CalculatorUOP} />
+          <Route path="/home/uop">
+            <CalculatorUOP user={user} />
+          </Route>
           <Route path="/home/uz" component={CalculatorUZ} />
           <Route path="/home/compare" component={Comparator} />
         </Route>
