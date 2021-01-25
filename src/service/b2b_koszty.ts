@@ -25,7 +25,7 @@ export default class B2BKoszty {
                 month: month,
                 value: Math.round(value),
                 title: title,
-                VAT: VAT * 100
+                VAT: VAT
             }
         })
     }

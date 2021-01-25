@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import "./styles.css";
 import {
   createStyles,
@@ -42,6 +42,26 @@ import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import RemoveCircleOutlineOutlinedIcon from "@material-ui/icons/RemoveCircleOutlineOutlined";
 import AddCircleOutlineOutlinedIcon from "@material-ui/icons/AddCircleOutlineOutlined";
+
+import B2B from '../../service/b2b'
+import B2BKoszty from '../../service/b2b_koszty'
+import { UserProps } from "../interfaces";
+import { getAllJSDocTags } from "typescript";
+
+const months:any = {
+  'Styczeń': 0,
+  'Luty': 1,
+  'Marzec': 2,
+  'Kwiecień': 3,
+  'Maj': 4,
+  'Czerwiec': 5,
+  'Lipice': 6,
+  'Sierpień': 7,
+  'Wrzesień': 8,
+  'Październik': 9,
+  'Listopad': 10,
+  'Grudzień': 11,
+}
 
 const ColorButton = withStyles((theme: Theme) => ({
   root: {
@@ -99,10 +119,36 @@ function createData(month: string, costs_all: number, revenue_all: number) {
   };
 }
 
-function Row(props: { row: ReturnType<typeof createData> }) {
-  const { row } = props;
-  const [open, setOpen] = React.useState(false);
+function Row(props: { month: string, user_id: string, b2b: Array<any>, b2bkoszty: Array<any>, onDataChange(): void }) {
+  const [open, setOpen] = useState(false);
   const classes = useRowStyles();
+
+  const [titleB2B, setTitleB2B] = useState('')
+  const [valueB2B, setValueB2B] = useState(0)
+
+  const handletitleB2BChange = (event: React.ChangeEvent<{value: unknown}>) => {
+    setTitleB2B(event.target.value as string)
+  }
+
+  const handleValueB2BChange = (event: React.ChangeEvent<{value: unknown}>) => {
+    setValueB2B(event.target.value as number)
+  }
+
+  const [titleB2BKoszty, setTitleB2BKoszty] = useState('')
+  const [valueB2BKoszty, setValueB2BKoszty] = useState(0)
+  const [VAT, setVAT] = useState(0)
+
+  const handleTitleB2BKosztyChange = (event: React.ChangeEvent<{value: unknown}>) => {
+    setTitleB2BKoszty(event.target.value as string)
+  }
+
+  const handleValueB2BKosztyChange = (event: React.ChangeEvent<{value: unknown}>) => {
+    setValueB2BKoszty(event.target.value as number)
+  }
+
+  const handleVATChange = (event: React.ChangeEvent<{value: unknown}>) => {
+    setVAT(event.target.value as number)
+  }
 
   // dialog income add koniec
   const [openDialog, setopenDialog] = React.useState(false);
@@ -112,8 +158,23 @@ function Row(props: { row: ReturnType<typeof createData> }) {
   };
 
   const handleClose = () => {
+    setTitleB2B('')
+    setValueB2B(0)
     setopenDialog(false);
   };
+
+  const handleB2BConfirm = () => {
+    B2B.create(
+      props.user_id,
+      titleB2B,
+      months[props.month],
+      valueB2B
+    ).then(res => {
+      props.onDataChange()
+      alert('Dane zostały dodane')
+      handleClose()
+    })
+  }
   // dialog income add koniec
 
   // dialog VAT add koniec
@@ -124,8 +185,25 @@ function Row(props: { row: ReturnType<typeof createData> }) {
   };
 
   const handleCloseVat = () => {
+    setTitleB2BKoszty('')
+    setValueB2BKoszty(0)
+    setVAT(0)
     setopenDialogVat(false);
   };
+
+  const handleConfirmVat = () => {
+    B2BKoszty.create(
+      props.user_id,
+      months[props.month],
+      valueB2BKoszty,
+      titleB2BKoszty,
+      VAT
+    ).then(data => {
+      props.onDataChange()
+      alert('Dane zostały dodane')
+      handleCloseVat()
+    })
+  }
   // dialog VAT add koniec
 
   return (
@@ -141,10 +219,10 @@ function Row(props: { row: ReturnType<typeof createData> }) {
           </IconButton>
         </StyledTableCell>
         <StyledTableCell component="th" scope="row">
-          {row.month}
+          {props.month}
         </StyledTableCell>
-        <StyledTableCell align="center">{row.costs_all}</StyledTableCell>
-        <StyledTableCell align="center">{row.revenue_all}</StyledTableCell>
+        <StyledTableCell align="center"> {props.b2b.reduce((acc: number, curr: any) => acc + curr.value, 0)} </StyledTableCell>
+        <StyledTableCell align="center"> {props.b2bkoszty.reduce((acc: number, curr: any) => acc + curr.value, 0)} </StyledTableCell>
         <StyledTableCell align="center">result</StyledTableCell>
       </StyledTableRow>
 
@@ -161,7 +239,6 @@ function Row(props: { row: ReturnType<typeof createData> }) {
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
-                    <StyledTableCell>Nr</StyledTableCell>
                     <StyledTableCell>Tytuł</StyledTableCell>
                     <StyledTableCell align="right">Wartość</StyledTableCell>
                     <StyledTableCell align="right">
@@ -194,6 +271,8 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                             label="Tytuł"
                             type="text"
                             fullWidth
+                            value={titleB2B}
+                            onChange={handletitleB2BChange}
                           />
                           <TextField
                             margin="dense"
@@ -202,13 +281,15 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                             type="number"
                             inputProps={{ step: "300", min: "0" }}
                             fullWidth
+                            value={valueB2B}
+                            onChange={handleValueB2BChange}
                           />
                         </DialogContent>
                         <DialogActions>
                           <Button onClick={handleClose} color="primary">
                             Anuluj
                           </Button>
-                          <Button onClick={handleClose} color="primary">
+                          <Button onClick={handleB2BConfirm} color="primary">
                             Dodaj
                           </Button>
                         </DialogActions>
@@ -218,13 +299,10 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                 </TableHead>
 
                 <TableBody>
-                  {row.revenue.map((revenueRow) => (
-                    <TableRow key={revenueRow.id}>
-                      <TableCell component="th" scope="row">
-                        {revenueRow.id}
-                      </TableCell>
-                      <TableCell>{revenueRow.title}</TableCell>
-                      <TableCell align="right">{revenueRow.value}</TableCell>
+                  {props.b2b.map((item: any) => (
+                    <TableRow key={item.id}>
+                      <TableCell>{item.title}</TableCell>
+                      <TableCell align="right">{item.value}</TableCell>
                       <TableCell align="right">
                         <IconButton aria-label="add to shopping cart">
                           <RemoveCircleOutlineOutlinedIcon />
@@ -253,7 +331,6 @@ function Row(props: { row: ReturnType<typeof createData> }) {
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
-                    <StyledTableCell>Nr</StyledTableCell>
                     <StyledTableCell>Tytuł</StyledTableCell>
                     <StyledTableCell align="right">Wartość</StyledTableCell>
                     <StyledTableCell align="right">VAT</StyledTableCell>
@@ -286,6 +363,8 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                             label="Tytuł"
                             type="text"
                             fullWidth
+                            value={titleB2BKoszty}
+                            onChange={handleTitleB2BKosztyChange}
                           />
                           <TextField
                             margin="dense"
@@ -294,6 +373,8 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                             type="number"
                             inputProps={{ step: "300", min: "0" }}
                             fullWidth
+                            value={valueB2BKoszty}
+                            onChange={handleValueB2BKosztyChange}
                           />
                           <TextField
                             margin="dense"
@@ -302,13 +383,15 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                             type="number"
                             inputProps={{ step: "1", min: "0" }}
                             fullWidth
+                            value={VAT}
+                            onChange={handleVATChange}
                           />
                         </DialogContent>
                         <DialogActions>
                           <Button onClick={handleCloseVat} color="primary">
                             Anuluj
                           </Button>
-                          <Button onClick={handleCloseVat} color="primary">
+                          <Button onClick={handleConfirmVat} color="primary">
                             Dodaj
                           </Button>
                         </DialogActions>
@@ -318,14 +401,11 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                 </TableHead>
 
                 <TableBody>
-                  {row.costs.map((costsRow) => (
-                    <TableRow key={costsRow.id}>
-                      <TableCell component="th" scope="row">
-                        {costsRow.id}
-                      </TableCell>
-                      <TableCell>{costsRow.title}</TableCell>
-                      <TableCell align="right">{costsRow.value}</TableCell>
-                      <TableCell align="right">{costsRow.vat}</TableCell>
+                  {props.b2bkoszty.map((item: any) => (
+                    <TableRow key={item.id}>
+                      <TableCell>{item.title}</TableCell>
+                      <TableCell align="right">{item.value}</TableCell>
+                      <TableCell align="right">{item.VAT}</TableCell>
                       <TableCell align="right">
                         <IconButton aria-label="add to shopping cart">
                           <RemoveCircleOutlineOutlinedIcon />
@@ -344,21 +424,6 @@ function Row(props: { row: ReturnType<typeof createData> }) {
   );
 }
 
-const rows = [
-  createData("Styczeń", 6000, 1400),
-  createData("Luty", 5800, 1800),
-  createData("Marzec", 6600, 500),
-  createData("Kwiecień", 4500, 1000),
-  createData("Maj", 4700, 2000),
-  createData("Czerwiec", 6000, 1444),
-  createData("Lipice", 5800, 1596),
-  createData("Sierpień", 6600, 1234),
-  createData("Wrzesień", 4500, 784),
-  createData("Październik", 4700, 1452),
-  createData("Listopad", 4700, 2666),
-  createData("Grudzień", 4700, 1000),
-];
-
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     formControl: {
@@ -370,7 +435,41 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function CalculatorB2B(props: any) {
+export interface CalculatorB2BProps {
+  user: UserProps | null
+}
+
+export default function CalculatorB2B(props: CalculatorB2BProps) {
+  const [mounted, setMounted] = useState(true)
+  const [B2BData, setB2Bdata]: [Array<any>, any] = useState([])
+  const [B2BKosztyData, setB2BKosztyData]: [Array<any>, any] = useState([])
+
+  const getData = () => {
+    if (props.user) {
+      B2B.getAll(props.user.id).then(res => {
+        console.log(res.data.body)
+        setB2Bdata(res.data.body)
+      })
+
+      B2BKoszty.getAll(props.user.id).then(res => {
+        console.log(res.data.body)
+        setB2BKosztyData(res.data.body)
+      })
+    }
+  }
+
+  const handleDataChange = () => {
+    getData()
+  }
+
+  useEffect(() => {
+    if (mounted) {
+      getData()
+    }
+
+    return () => {setMounted(false)}
+  }, [mounted])
+
   const classes = useStyles();
   //praca w miejscu zamieszkania
   const [value, setValue] = React.useState("Tak");
@@ -499,8 +598,14 @@ export default function CalculatorB2B(props: any) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {rows.map((row) => (
-                    <Row key={row.month} row={row} />
+                  {Object.keys(months).map((month: any) => (
+                    <Row 
+                      key={month} 
+                      month={month} 
+                      user_id={props.user ? props.user.id : ''} 
+                      b2b={B2BData.filter((item: any) => item.month === months[month])} 
+                      b2bkoszty={B2BKosztyData.filter((item: any) => item.month === months[month])} 
+                      onDataChange={handleDataChange}/>
                   ))}
                 </TableBody>
               </Table>

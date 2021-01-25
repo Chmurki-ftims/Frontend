@@ -14,10 +14,7 @@ export default class B2B {
         user_id: string,
         title: string, 
         month: number, 
-        value: number, 
-        chorobowe: boolean, 
-        zdrowotne: boolean, 
-        praca_zam: boolean): Promise<AxiosResponse<any>> {
+        value: number): Promise<AxiosResponse<any>> {
             return axios.post(URL + '/b2b', {}, {
                 headers: {
                     user_id: user_id,

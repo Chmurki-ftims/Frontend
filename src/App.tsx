@@ -5,8 +5,7 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Redirect,
-  useHistory,
+  Redirect
 } from "react-router-dom";
 import About from "./components/About";
 import CalculatorB2B from "./components/CalculatorB2B";
@@ -26,7 +25,6 @@ export default function App() {
   //state
   const [mounted, setMounted]: [boolean, any] = useState(true)
   const [user, setUser]: [null | UserProps, any] = useState(null)
-  const history = useHistory()
   
   useEffect(() => {
     if (mounted) {
@@ -87,7 +85,9 @@ export default function App() {
         <Route path="/home">
           <NavBar user={user} onSignOut={handleSignOut}/>
           <Route exact path="/home/" component={About} />
-          <Route path="/home/b2b" component={CalculatorB2B} />
+          <Route path="/home/b2b">
+            <CalculatorB2B user={user} />
+          </Route>
           <Route path="/home/uop">
             <CalculatorUOP user={user} />
           </Route>
