@@ -351,10 +351,9 @@ function Row(props: { month: string, user_id: string, b2b: Array<any>, b2bkoszty
                         </DialogTitle>
                         <DialogContent>
                           <DialogContentText>
-                            Aby obliczyć swój dochód netto oraz zobaczyć ile
-                            pieniędzy odprowadzane jest na daną składkę,
-                            uzupełnij poniższe pola dla i wciśnij przycisk
-                            'Oblicz'.
+                          Aby obliczyć swój dochód netto,
+                          uzupełnij poniższe pola i wciśnij przycisk
+                          'Oblicz'.
                           </DialogContentText>
                           <TextField
                             autoFocus

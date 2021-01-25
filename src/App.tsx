@@ -91,7 +91,9 @@ export default function App() {
           <Route path="/home/uop">
             <CalculatorUOP user={user} />
           </Route>
-          <Route path="/home/uz" component={CalculatorUZ} />
+          <Route path="/home/uz">
+            <CalculatorUZ user={user} />
+          </Route>
           <Route path="/home/compare" component={Comparator} />
         </Route>
 

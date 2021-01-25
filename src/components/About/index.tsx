@@ -20,8 +20,7 @@ export default function About() {
             wprowadzeniu przychodów i kosztów związanych z prowadzoną
             działalnością.<br/>
             Dzięki naszej aplikacji dostaniesz błyskawiczną informację, jak
-            pensja ostatecznie wyląduje na Twoim koncie. Ten kalkulator obliczy
-            również wszystkie składki, które są odprowadzane z Twojej pensji.
+            pensja ostatecznie wyląduje na Twoim koncie.
             Kalkulator i porównywarka są szczególnie przydatne w momencie
             podjęcia nowej pracy lub zmiany pracy. Dzięki nam szybko dowiesz się
             jaka umowa jest dla Ciebie najkorzystniejsza.
