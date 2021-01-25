@@ -103,23 +103,23 @@ const useRowStyles = makeStyles({
   },
 });
 
-function createData(month: string, costs_all: number, revenue_all: number) {
-  return {
-    month,
-    costs_all,
-    revenue_all,
-    revenue: [
-      { id: "1", title: "Faktura 1", value: 3000 },
-      { id: "2", title: "Faktura 2", value: 1000 },
-    ],
-    costs: [
-      { id: "1", title: "Koszt 1", value: 1000, vat: 8 },
-      { id: "2", title: "Koszt 2", value: 500, vat: 8 },
-    ],
-  };
-}
+// function createData(month: string, costs_all: number, revenue_all: number) {
+//   return {
+//     month,
+//     costs_all,
+//     revenue_all,
+//     revenue: [
+//       { id: "1", title: "Faktura 1", value: 3000 },
+//       { id: "2", title: "Faktura 2", value: 1000 },
+//     ],
+//     costs: [
+//       { id: "1", title: "Koszt 1", value: 1000, vat: 8 },
+//       { id: "2", title: "Koszt 2", value: 500, vat: 8 },
+//     ],
+//   };
+// }
 
-function Row(props: { month: string, user_id: string, b2b: Array<any>, b2bkoszty: Array<any>, onDataChange(): void }) {
+function Row(props: { month: string, user_id: string, b2b: Array<any>, b2bkoszty: Array<any>, B2Bcalculated: number | string,  onDataChange(): void }) {
   const [open, setOpen] = useState(false);
   const classes = useRowStyles();
 
@@ -221,9 +221,9 @@ function Row(props: { month: string, user_id: string, b2b: Array<any>, b2bkoszty
         <StyledTableCell component="th" scope="row">
           {props.month}
         </StyledTableCell>
-        <StyledTableCell align="center"> {props.b2b.reduce((acc: number, curr: any) => acc + curr.value, 0)} </StyledTableCell>
         <StyledTableCell align="center"> {props.b2bkoszty.reduce((acc: number, curr: any) => acc + curr.value, 0)} </StyledTableCell>
-        <StyledTableCell align="center">result</StyledTableCell>
+        <StyledTableCell align="center"> {props.b2b.reduce((acc: number, curr: any) => acc + curr.value, 0)} </StyledTableCell>
+        <StyledTableCell align="center"> {props.B2Bcalculated} </StyledTableCell>
       </StyledTableRow>
 
       <TableRow>
@@ -442,6 +442,45 @@ export default function CalculatorB2B(props: CalculatorB2BProps) {
   const [mounted, setMounted] = useState(true)
   const [B2BData, setB2Bdata]: [Array<any>, any] = useState([])
   const [B2BKosztyData, setB2BKosztyData]: [Array<any>, any] = useState([])
+  const [B2Bcalculated, setB2BCalculated]: [Array<number | string>, any] = useState(new Array(12).fill('Nie obliczono'))
+
+  const handleCalculate = () => {
+    const newCalculated = Object.values(months).map((month: any, index: number) => {
+      const przychod = B2BData.filter((item: any) => item.month === month).reduce((acc:number, curr: any) => acc + curr.value, 0)
+      const koszty = B2BKosztyData.filter((item: any) => item.month === month).reduce((acc:number, curr: any) => acc + curr.value, 0)
+    
+      if(!!koszty){
+      let brutto = przychod - koszty;
+
+      let vatFaktura = przychod * 0.23;
+      
+      let res = przychod - (1069.14);
+      
+      let tax;
+      if( taxType === "liniowy"){
+        tax = (przychod - koszty) * 0.19;
+      } 
+      else {
+        tax = (przychod - koszty) * 0.17;
+      }
+      
+      const vats = B2BKosztyData.filter((item:any) => item.month === month).map((item: any) => item.VAT/100) 
+
+      const VATavg = vats.reduce((acc: number, curr: number) => acc + curr, 0) / vats.length
+
+      tax = tax - 312.02;
+
+      let vatDoZaplaty = vatFaktura - koszty * VATavg; 
+
+      let final = przychod - tax - 1431.48;
+      return final.toFixed(2);
+    }
+    return 0; 
+    })    
+
+    setB2BCalculated(newCalculated)
+  }
+
 
   const getData = () => {
     if (props.user) {
@@ -497,8 +536,11 @@ export default function CalculatorB2B(props: CalculatorB2BProps) {
   ) => {
     setInsurance({ ...insurance, [event.target.name]: event.target.checked });
   };
-
   const { sicknessInsurance, healthInsurance } = insurance;
+  
+  
+  
+  
   return (
     <div className="container-fluid page">
       <div className="form-row">
@@ -520,12 +562,13 @@ export default function CalculatorB2B(props: CalculatorB2BProps) {
                     value={taxType}
                     onChange={handleChangeTaxType}
                     label="taxType"
+                    fullWidth
                   >
                     <MenuItem value={"liniowy"}>liniowy</MenuItem>
                     <MenuItem value={"progresywny"}>progresywny </MenuItem>
                   </Select>
 
-                  <FormLabel component="legend">
+                  {/* <FormLabel component="legend">
                     Czy pracujesz w miejscu zamieszkania?
                   </FormLabel>
                   <RadioGroup
@@ -568,8 +611,8 @@ export default function CalculatorB2B(props: CalculatorB2BProps) {
                       />
                     }
                     label="Zdrowotne"
-                  />
-                </FormGroup>
+                  />*/}
+                </FormGroup> 
               </FormControl>
             </div>
             <ColorButton
@@ -577,6 +620,7 @@ export default function CalculatorB2B(props: CalculatorB2BProps) {
               color="primary"
               size="large"
               fullWidth
+              onClick={(event) => {handleCalculate()}}
             >
               Oblicz
             </ColorButton>
@@ -597,13 +641,14 @@ export default function CalculatorB2B(props: CalculatorB2BProps) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {Object.keys(months).map((month: any) => (
+                  {Object.keys(months).map((month: any, index: number) => (
                     <Row 
                       key={month} 
                       month={month} 
                       user_id={props.user ? props.user.id : ''} 
                       b2b={B2BData.filter((item: any) => item.month === months[month])} 
                       b2bkoszty={B2BKosztyData.filter((item: any) => item.month === months[month])} 
+                      B2Bcalculated={B2Bcalculated[index]}
                       onDataChange={handleDataChange}/>
                   ))}
                 </TableBody>

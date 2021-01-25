@@ -319,7 +319,35 @@ export default function CalculatorUOZ(props: CalculatorUOZProps) {
     const newCalculated = Object.values(months).map((month: any, index: number) => {
       const brutto = UZdata.filter((item: any) => item.month === month).reduce((acc:number, curr: any) => acc + curr.value, 0)
 
- return brutto})    
+      let skl = brutto*0.1371; 
+
+      let res = brutto - skl; 
+    
+      let res2 = res; 
+      if (valueage === 'yes') {
+        res = res - (res*0.09)
+        return res.toFixed(2)
+      }
+
+      let tax; 
+      if (value === "0.2"){
+        tax = res * 0.2; 
+      }
+      else{
+        tax = res * 0.5; 
+      }
+      
+      res = res - tax; 
+
+      let progres = res * 0.17;
+
+      progres = progres - res2 * 0.0775;
+
+      let resultfinal = brutto - (brutto * 0.2271) - progres;
+
+      let final = resultfinal.toFixed(2);
+      return final;
+    })    
 
     setUZCalculated(newCalculated)
   }
